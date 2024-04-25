@@ -1,0 +1,45 @@
+{% extends 'holidaycalculator/layout.html' %}
+
+{% block body %}
+<div class="body container-fluid">
+
+    <div class="row mt-4">
+        <div class="col-12 text-center">
+            <h1>Welcome!</h1>
+            <h2>Woud you like to know how many days off you can take this year?</h2>
+            <button id="getstarted" class="m-4 btn btn-primary">Get started</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 text-center">
+            <h1>How many hours off can you take?</h1>
+            <div class="form">
+                <input type="text">
+                <button id="hours" class="m-4 btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 text-center">
+            <h1>How many hours per day do you spend at work?</h1>
+            <div class="form">
+                <input type="text">
+                <button class="m-4 btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 text-center">
+            <h1>Do you generally work from mondays to fridays?</h1>
+            <div class="form">
+                <button id="yes" class="m-4 btn btn-primary">Yes</button>
+                <button id="no" class="m-4 btn btn-primary">No</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
