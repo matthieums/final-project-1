@@ -1,0 +1,14 @@
+
+#calendar-days-row > .col {
+    background-color: aqua;
+    
+}
+
+.calendar-cell {
+    min-height: 100px;
+}
+
+.calendar-cell:hover {
+background-color: blue;
+cursor:pointer;
+}
