@@ -1,7 +1,5 @@
-
 #calendar-days-row > .col {
     background-color: aqua;
-    
 }
 
 .calendar-cell {
@@ -9,6 +7,22 @@
 }
 
 .calendar-cell:hover {
-background-color: blue;
-cursor:pointer;
+    cursor:pointer;
 }
+
+.calendar-cell:hover {
+    background-color: blue;
+}
+
+.calendar-cell.marked:hover {
+    background-color: aqua;
+}
+
+.calendar-cell:active {
+    background-color: blueviolet;
+}
+
+.calendar-cell.marked:active {
+    background-color: blueviolet !important; 
+}
+
