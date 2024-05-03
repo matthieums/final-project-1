@@ -2,6 +2,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     
     if (document.getElementById('calendar-container')) {
+        
         const months = ["January", "February", "March", "April", "May", "June", "July",
         "August", "September", "October", "November", "December"]
         const dayCount = (year, month) => new Date(year, month, 0).getDate();
@@ -24,8 +25,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         //Display appropriate numbers in cells
         let calendarCells = document.querySelectorAll('.calendar-cell');
-
-
         if (firstDayIDX >= 1) {
 
             //  if from monday -> saturday
@@ -128,49 +127,70 @@ document.addEventListener('DOMContentLoaded', function () {
                     calendarCells[firstDayIDX + i - 2].innerHTML = i;
                 }  
             } else {
-                    let calendarRow4 = document.getElementById('calendar-row-4').parentNode
-                    let calendarRow5 = document.createElement('div');
-                    calendarRow5.id = "calendar-row-5"
-                    calendarRow5.classList.add("row", "m-lg-2", "justify-content-center");
-                    calendarRow4.appendChild(calendarRow5);
+                let calendarRow4 = document.getElementById('calendar-row-4').parentNode
+                let calendarRow5 = document.createElement('div');
+                calendarRow5.id = "calendar-row-5"
+                calendarRow5.classList.add("row", "m-lg-2", "justify-content-center");
+                calendarRow4.appendChild(calendarRow5);
                     
-                    if (firstDayIDX < 1) {
-                        for (i = 0; i < 7 ; i++) {
-                            let cell = document.createElement('div');
-                            cell.classList.add ('calendar-cell', 'col', 'col-lg-1', 'border')
-                            calendarRow5.appendChild(cell);
-                        }
-                        calendarCells = document.querySelectorAll('.calendar-cell');
-                        for(let i = 1; i <= daysInCurrentMonth; i++ ) {
-                            calendarCells[firstDayIDX + 5 + i].innerHTML = i;
-                        }  
+                if (firstDayIDX < 1) {
+                    for (i = 0; i < 7 ; i++) {
+                        let cell = document.createElement('div');
+                        cell.classList.add ('calendar-cell', 'col', 'col-lg-1', 'border')
+                        calendarRow5.appendChild(cell);
+                    }
+                    calendarCells = document.querySelectorAll('.calendar-cell');
+                    for(let i = 1; i <= daysInCurrentMonth; i++ ) {
+                        calendarCells[firstDayIDX + 5 + i].innerHTML = i;
+                    }  
+                } else {
+                    for (i = 0; i < 7 ; i++) {
+                        let cell = document.createElement('div');
+                        cell.classList.add ('calendar-cell', 'col', 'col-lg-1', 'border')
+                        calendarRow5.appendChild(cell);
+                    }
+                    calendarCells = document.querySelectorAll('.calendar-cell');
+                    for(let i = 1; i <= daysInCurrentMonth; i++ ) {
+                        calendarCells[firstDayIDX -2 + i].innerHTML = i;
+                    }  
+                } 
+            }
+        });
+
+        calendarCells.forEach(cell => {
+            cell.addEventListener('click', () => {
+                //if selected day is not in this month, don't mark it.
+                if (cell.innerHTML !== '') {
+                    console.log('not empty')
+                    holidayHours = parseInt(document.getElementById('holidayhours').innerHTML);
+                    // If cell is not marked yet, mark it. Else remove mark.
+                    if (cell.classList.contains('marked'))
+                    {
+                        cell.classList.remove('marked')
+                        cell.style.background = '';
+                        holidayHours += 8
+                        document.getElementById('holidayhours').innerHTML = holidayHours;
                     } else {
-                        for (i = 0; i < 7 ; i++) {
-                            let cell = document.createElement('div');
-                            cell.classList.add ('calendar-cell', 'col', 'col-lg-1', 'border')
-                            calendarRow5.appendChild(cell);
-                        }
-                        calendarCells = document.querySelectorAll('.calendar-cell');
-                        for(let i = 1; i <= daysInCurrentMonth; i++ ) {
-                            calendarCells[firstDayIDX -2 + i].innerHTML = i;
-                        }  
-                    } 
-                }   
-            });
+                        cell.classList.add('marked');
+                        holidayHours -= 8;
+                        document.getElementById('holidayhours').innerHTML = holidayHours;
+                    }
+                    if (document.getElementById('holidayhours').innerHTML <= 0) {
+                        document.getElementById('holidayhours').style.color = 'red'
+                    } else {
+                        document.getElementById('holidayhours').style.color = 'blue'
+                    }
+                }
+            })
+        });
+    
 
-            calendarCells.forEach(cell => {
-                cell.addEventListener('click', () => {
-                    // If cell is not selected yet, select. Else deselect.
-                    cell.style.backgroundColor = cell.style.backgroundColor? (cell.classList.remove('marked'), ''):(cell.classList.add('marked'), 'blue')
 
-                    // If selected, I need to display them when coming back after a next or previous. => fetch requests
-                    // to get data, or still use cache.
+        // Save data about the marked cells
+        // When clicking prev or next, remove or add marked property
+        // Cache everything?
 
-                    // AJAX => Get data of the selected calendar and send it to the server or add it to the cache.
-                    // so the data is saved from one calendar page to the other
-                    // 
-                })
-            });
-        }
+
+    }
 }); // Close DOMEventlistener
 

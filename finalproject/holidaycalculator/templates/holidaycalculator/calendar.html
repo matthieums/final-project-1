@@ -15,7 +15,7 @@
     <div class="row m-lg-2 justify-content-center">
         <div class="col-4"><button id="previous-month" class="btn">Previous</button></div>
         
-        <div id="hours-remaining" class="col-3"><h3><strong>{{holidayhours}}</strong> hours left</h3></div>
+        <div id="hours-remaining" class="col-3"><h3><strong id="holidayhours" class="m-1">{{holidayhours}}</strong> hours left</h3></div>
         <div class="col-4"><button id="next-month" class="btn">Next</button></div>
     </div>
     <div id="calendar-days-row" class="row m-lg-2 justify-content-center">
@@ -29,9 +29,7 @@
     {% for i in rows %}
         <div id="calendar-row-{{i}}" class="row m-lg-2 justify-content-center">
             {% for j in cols %}
-                <div class="calendar-cell col col-lg-1 border">
-                    <div></div>
-                </div>
+                <div class="calendar-cell col col-lg-1 border"></div>
             {% endfor %}
         </div>
     {% endfor %}

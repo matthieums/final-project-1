@@ -8,23 +8,27 @@
     user-select: none;
 }
 
-.calendar-cell:hover {
-    cursor:pointer;
+.calendar-cell.marked {
+    background-color: blue;
 }
 
 .calendar-cell:hover {
+    cursor:pointer;
     border-color: green !important;
 }
 
 .calendar-cell.marked:hover {
-    background-color: aqua;
+    background-color: blue;
 }
 
 .calendar-cell:active {
-    background-color: blueviolet;
+    background-color: darkblue;
 }
 
 .calendar-cell.marked:active {
-    background-color: blueviolet !important; 
+    background-color: darkblue !important; 
 }
 
+#holidayhours {
+    color: blue;
+}
