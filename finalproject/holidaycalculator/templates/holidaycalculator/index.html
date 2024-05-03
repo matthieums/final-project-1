@@ -14,10 +14,11 @@
     <div class="row">
         <div class="col-12 text-center">
             <h1>How many hours off can you take?</h1>
-            <div class="form">
-                <input type="text">
-                <button id="hours" class="m-4 btn btn-primary">Submit</button>
-            </div>
+                <form action="calendar" method="post">
+                    {% csrf_token %}
+                    {{ holidayform }}
+                <input type="Submit" value="submit">
+                </form>
         </div>
     </div>
 

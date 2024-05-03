@@ -1,9 +1,11 @@
 #calendar-days-row > .col {
     background-color: aqua;
+    user-select: none;
 }
 
 .calendar-cell {
     min-height: 100px;
+    user-select: none;
 }
 
 .calendar-cell:hover {
@@ -11,7 +13,7 @@
 }
 
 .calendar-cell:hover {
-    background-color: blue;
+    border-color: green !important;
 }
 
 .calendar-cell.marked:hover {
