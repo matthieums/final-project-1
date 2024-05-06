@@ -1,8 +1,80 @@
+// Click event handler
+function handleClick(cell, index) {
+    console.log("clickHandler was called")
+
+    if (cell.innerHTML) {
+        let combinedValue = cell.getAttribute('data-custom');
+        let [year, month] = combinedValue.split(',');
+        key = keyGen(year, month, index);
+        console.log(key)
+
+        holidayHours = document.getElementById('holidayhours').innerHTML
+        remainingHours = parseInt(holidayHours)
+
+    // If cell is not marked yet, mark it. Else remove mark.
+        if (cell.classList.contains('marked')) {
+            cell.classList.remove('marked')
+            cell.style.backgroundColor = '';
+            remainingHours += 8;
+            document.getElementById('holidayhours').innerHTML = remainingHours;
+            
+            //Delete from local storage
+            localStorage.setItem('holidayHours', remainingHours)
+            localStorage.removeItem(key)
+            console.log("key removed")
+
+        } else {
+            cell.classList.add('marked');
+            cell.style.backgroundColor = 'blue'
+            remainingHours -= 8;
+            document.getElementById('holidayhours').innerHTML = remainingHours;
+
+            //Add to local storage
+            localStorage.setItem('holidayHours', remainingHours)
+            localStorage.setItem(key, index);
+            console.log('key added')
+        }
+
+
+        // Visuals for the remaining number of hours
+        if (document.getElementById('holidayhours').innerHTML <= 0) {
+            document.getElementById('holidayhours').style.color = 'red'
+        } else {
+            document.getElementById('holidayhours').style.color = 'blue'
+        }
+    }
+}
+
+function setEventListeners(cells) { 
+    // if values already stored locally for the current month, apply visuals
+    
+    cells.forEach((cell, index) => {
+        const clickHandler = () => handleClick(cell, index);
+        cell.addEventListener('click', clickHandler);
+    })
+}
+
+function keyGen(year, month, index) {
+    return `_${year}_${month}_${index}`;
+}
+ 
+function checkLocalStorage(cell, key) {
+    
+    if(localStorage.getItem(key)) {
+        cell.classList.add('marked')
+        cell.backgroundColor = 'blue'
+}
+}
+  
+
+
 
 document.addEventListener('DOMContentLoaded', function () {
     
     if (document.getElementById('calendar-container')) {
         
+        // Get data to populate calendar and set each cells' value
+
         const months = ["January", "February", "March", "April", "May", "June", "July",
         "August", "September", "October", "November", "December"]
         const dayCount = (year, month) => new Date(year, month, 0).getDate();
@@ -13,10 +85,15 @@ document.addEventListener('DOMContentLoaded', function () {
         let currentYear = today.getFullYear();
         let daysInCurrentMonth = dayCount(currentYear, currentMonthIDX + 1);
 
+
         // Display current month above calendar:
-        if (document.querySelector('#current-month')) {
-            let currentMonthElement = document.querySelector('#current-month');
-            currentMonthElement.innerHTML = `${months[currentMonthIDX]} ${currentYear}`;
+        let currentMonthElement = document.querySelector('#current-month');
+        currentMonthElement.innerHTML = `${months[currentMonthIDX]} ${currentYear}`;
+
+        // Remaining hours display if local storage
+        if (localStorage.getItem('holidayHours')) {
+            holidayHours = parseInt(localStorage.getItem('holidayHours'))
+            document.getElementById('holidayhours').innerHTML = holidayHours;
         }
     
         // Get first day of given month and the index associated with the day (sunday = 0)
@@ -24,7 +101,15 @@ document.addEventListener('DOMContentLoaded', function () {
         let firstDayIDX = firstDayOfMonth.getDay(currentYear, currentMonthIDX + 1);
 
         //Display appropriate numbers in cells
-        let calendarCells = document.querySelectorAll('.calendar-cell');
+        const calendarCells = document.querySelectorAll('.calendar-cell');
+
+        // Set each cell's attribute to current month and year
+        calendarCells.forEach(cell => {
+            let YearAndMonth = currentYear + ',' + currentMonthIDX;
+            cell.setAttribute('data-custom', YearAndMonth);
+        })
+
+
         if (firstDayIDX >= 1) {
 
             //  if from monday -> saturday
@@ -47,19 +132,41 @@ document.addEventListener('DOMContentLoaded', function () {
             calendarCells = document.querySelectorAll('.calendar-cell');
             for(let i = 1; i <= daysInCurrentMonth; i++ ) {
                 calendarCells[firstDayIDX + 5 + i].innerHTML = i;
-            }    
-        };
+            }   
+        }
 
-        // Logic for Previous Month button
+        calendarCells.forEach((cell, index) => {
+        key = keyGen(currentYear, currentMonthIDX, index)
+        checkLocalStorage(cell, key)
+        })
+        setEventListeners(calendarCells, currentYear, currentMonthIDX)
+
+
+
+
+
+        // Previous month button logic
         document.querySelector('#previous-month').addEventListener('click', () => {
-            calendarCells.forEach((cell) => cell.innerHTML = '');
-            document.getElementById('calendar-row-5')?.remove()
-            currentMonthIDX = (currentMonthIDX - 1);
+
+            document.getElementById('calendar-row-5')?.remove();
+
+            currentMonthIDX = currentMonthIDX - 1 ;
             if (currentMonthIDX < 0) {
                 currentMonthIDX = 11
                 currentYear -= 1
-            }
+            } 
 
+            // Set each cell's attribute to current month and year
+            calendarCells.forEach((cell, index) => {
+                cell.innerHTML = ''
+                cell.classList.remove('marked')
+                cell.style.backgroundColor = ''
+                let YearAndMonth = currentYear + ',' + currentMonthIDX;
+                cell.setAttribute('data-custom', YearAndMonth);
+                key = keyGen(currentYear, currentMonthIDX, index)
+                checkLocalStorage(cell, key) 
+            })
+            
             // Set current month to new current month
             document.querySelector('#current-month').innerHTML = `${months[currentMonthIDX]} ${currentYear}`;
 
@@ -79,42 +186,61 @@ document.addEventListener('DOMContentLoaded', function () {
                     calendarRow5.id = "calendar-row-5"
                     calendarRow5.classList.add("row", "m-lg-2", "justify-content-center");
                     calendarRow4.appendChild(calendarRow5);
+
+
                     if (firstDayIDX < 1) {
                         for (i = 0; i < 7 ; i++) {
-                            let cell = document.createElement('div');
-                            cell.classList.add ('calendar-cell', 'col', 'col-lg-1', 'border')
-                            calendarRow5.appendChild(cell);
+                            let newCell = document.createElement('div');
+                            newCell.classList.add ('calendar-cell', 'col', 'col-lg-1', 'border')
+                            calendarRow5.appendChild(newcell);
                         }
                         let calendarCells = document.querySelectorAll('.calendar-cell');
                         for(let i = 1; i <= daysInCurrentMonth; i++ ) {
                             calendarCells[firstDayIDX + 5 + i].innerHTML = i;
                         }  
+
                     } else {
                         for (i = 0; i < 7 ; i++) {
-                            let cell = document.createElement('div');
-                            cell.classList.add ('calendar-cell', 'col', 'col-lg-1', 'border')
-                            calendarRow5.appendChild(cell);
+                            let newCell = document.createElement('div');
+                            newCell.classList.add ('calendar-cell', 'col', 'col-lg-1', 'border')
+                            calendarRow5.appendChild(newCell);
                         }
                         // Get new cell total in case a row was added
                         let calendarCells = document.querySelectorAll('.calendar-cell');
                         for(let i = 1; i <= daysInCurrentMonth; i++ ) {
                             calendarCells[firstDayIDX -2 + i].innerHTML = i;
                         }  
+
                     } 
                 }   
         });
 
 
+
+
+
+
         //Next month button logic
         document.querySelector('#next-month').addEventListener('click', () => {
-            calendarCells.forEach((cell) => cell.innerHTML = '');
+           
             document.getElementById('calendar-row-5')?.remove()
-            currentMonthIDX = (currentMonthIDX + 1)
+            
+            currentMonthIDX += 1
+
             if (currentMonthIDX > 11) {
                 currentMonthIDX = 0;
                 currentYear += 1;
-                console.log("Year switch")
             }
+
+            calendarCells.forEach((cell, index) => {
+                cell.innerHTML = ''
+                cell.classList.remove('marked')
+                cell.style.backgroundColor = ''
+                let YearAndMonth = currentYear + ',' + currentMonthIDX;
+                cell.setAttribute('data-custom', YearAndMonth);
+                let key = keyGen(currentYear, currentMonthIDX, index)
+                checkLocalStorage(cell, key) 
+            })
 
             document.querySelector('#current-month').innerHTML = `${months[currentMonthIDX]} ${currentYear}`;
 
@@ -157,40 +283,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        calendarCells.forEach(cell => {
-            cell.addEventListener('click', () => {
-                //if selected day is not in this month, don't mark it.
-                if (cell.innerHTML !== '') {
-                    console.log('not empty')
-                    holidayHours = parseInt(document.getElementById('holidayhours').innerHTML);
-                    // If cell is not marked yet, mark it. Else remove mark.
-                    if (cell.classList.contains('marked'))
-                    {
-                        cell.classList.remove('marked')
-                        cell.style.background = '';
-                        holidayHours += 8
-                        document.getElementById('holidayhours').innerHTML = holidayHours;
-                    } else {
-                        cell.classList.add('marked');
-                        holidayHours -= 8;
-                        document.getElementById('holidayhours').innerHTML = holidayHours;
-                    }
-                    if (document.getElementById('holidayhours').innerHTML <= 0) {
-                        document.getElementById('holidayhours').style.color = 'red'
-                    } else {
-                        document.getElementById('holidayhours').style.color = 'blue'
-                    }
-                }
-            })
-        });
+    } // Close calendar-container logic
     
-
-
-        // Save data about the marked cells
-        // When clicking prev or next, remove or add marked property
-        // Cache everything?
-
-
-    }
 }); // Close DOMEventlistener
-
+     

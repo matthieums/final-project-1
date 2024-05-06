@@ -6,6 +6,7 @@
 .calendar-cell {
     min-height: 100px;
     user-select: none;
+    background-color: transparent;
 }
 
 .calendar-cell.marked {
