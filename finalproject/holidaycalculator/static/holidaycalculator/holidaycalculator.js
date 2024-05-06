@@ -17,8 +17,8 @@ function handleClick(cell, index) {
             document.getElementById('holidayhours').innerHTML = remainingHours;
             
             //Delete from local storage
-            sessionStorage.setItem('holidayHours', remainingHours)
-            sessionStorage.removeItem(key)
+            localStorage.setItem('holidayHours', remainingHours)
+            localStorage.removeItem(key)
 
         } else {
             cell.classList.add('marked');
@@ -27,16 +27,23 @@ function handleClick(cell, index) {
             document.getElementById('holidayhours').innerHTML = remainingHours;
 
             //Add to local storage
-            sessionStorage.setItem('holidayHours', remainingHours)
-            sessionStorage.setItem(key, index);
+            localStorage.setItem('holidayHours', remainingHours)
+            localStorage.setItem(key, index);
         }
-
-
-        // Visuals for the remaining number of hours
-        if (document.getElementById('holidayhours').innerHTML <= 0) {
+        
+        // Visuals for the remaining number of hours and marked cells
+        let markedCells = document.querySelectorAll('.calendar-cell.marked')
+        if (document.getElementById('holidayhours').innerHTML < 0) {
             document.getElementById('holidayhours').style.color = 'red'
+
+            markedCells.forEach(cell => {
+                cell.style.backgroundColor = 'red'
+            })
         } else {
             document.getElementById('holidayhours').style.color = 'blue'
+            markedCells.forEach(cell => {
+                cell.style.backgroundColor = ''
+            })
         }
     }
 }
@@ -52,11 +59,27 @@ function keyGen(year, month, index) {
     return `_${year}_${month}_${index}`;
 }
  
-function checksessionStorage(cell, key) {
-    if(sessionStorage.getItem(key)) {
+function checklocalStorage(cell, key) {
+    if(localStorage.getItem(key)) {
         cell.classList.add('marked')
         cell.backgroundColor = 'blue'
     }
+}
+
+function darkenEmptyCells (cells) {
+    const weekend = [5, 6, 12, 13, 19, 20, 26, 27, 33, 34, 41, 42]
+    cells.forEach((cell, index) => {
+        if (!cell.innerHTML) {
+            cell.classList.add('empty')
+        } else {
+            cell.classList.remove('empty')
+            if (weekend.includes(index)) {
+                cell.classList.add('weekend')
+            } else {
+                cell.classList.remove('weekend')
+            }
+        }
+    })
 }
 
 
@@ -64,7 +87,7 @@ function checksessionStorage(cell, key) {
 document.addEventListener('DOMContentLoaded', function () {
 
     // clear previous session
-    sessionStorage.clear()
+    localStorage.clear()
 
     if (document.getElementById('calendar-container')) {
         const additionalRow = document.getElementById('calendar-row-5')
@@ -85,13 +108,11 @@ document.addEventListener('DOMContentLoaded', function () {
         let currentMonthElement = document.querySelector('#current-month');
         currentMonthElement.innerHTML = `${months[currentMonthIDX]} ${currentYear}`;
 
-        sessionStorage.setItem('holidayhours', document.getElementById('holidayhours').innerHTML)
+        localStorage.setItem('holidayHoursOriginal', document.getElementById('holidayhours').innerHTML)
         
-        // WHAT SHOULD BE DISPLAYED? HOW TO HANDLE THE DATA WHEN USER
-        // COMES FROM POST REQUEST OR GET REQUEST?
-        if (sessionStorage.getItem('holidayHours')) {
-            sessionStorage.setItem('holidayHours', document.getElementById('holidayhours').innerHTML)
-            holidayHours = parseInt(sessionStorage.getItem('holidayHours'))
+        if (localStorage.getItem('holidayHours')) {
+            localStorage.setItem('holidayHours', document.getElementById('holidayhours').innerHTML)
+            holidayHours = parseInt(localStorage.getItem('holidayHours'))
             document.getElementById('holidayhours').innerHTML = holidayHours;
         }
     
@@ -128,13 +149,19 @@ document.addEventListener('DOMContentLoaded', function () {
         // Check if there was a previous session
         calendarCells.forEach((cell, index) => {
         key = keyGen(currentYear, currentMonthIDX, index)
-        checksessionStorage(cell, key)
+        checklocalStorage(cell, key)
+        darkenEmptyCells (calendarCells)
         })
 
         setEventListeners(calendarCells, currentYear, currentMonthIDX)
 
+        // Reset button logic
+        resetButton = document.getElementById('reset')
+        resetButton.addEventListener('click', () => {
+            location.reload()
 
-
+            // localStorage.clear()
+        })
 
 
         // Previous month button logic
@@ -156,7 +183,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 let YearAndMonth = currentYear + ',' + currentMonthIDX;
                 cell.setAttribute('data-custom', YearAndMonth);
                 key = keyGen(currentYear, currentMonthIDX, index)
-                checksessionStorage(cell, key) 
+                checklocalStorage(cell, key) 
             })
             
             // Set current month to new current month
@@ -185,6 +212,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     }  
                 } 
             }
+            darkenEmptyCells(calendarCells)
+
         });
 
 
@@ -209,7 +238,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 let YearAndMonth = currentYear + ',' + currentMonthIDX;
                 cell.setAttribute('data-custom', YearAndMonth);
                 let key = keyGen(currentYear, currentMonthIDX, index)
-                checksessionStorage(cell, key) 
+                checklocalStorage(cell, key) 
             })
 
             document.querySelector('#current-month').innerHTML = `${months[currentMonthIDX]} ${currentYear}`;
@@ -235,6 +264,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     }  
                 } 
             }
+            darkenEmptyCells(calendarCells)
+
         });
 
     } // Close calendar-container logic

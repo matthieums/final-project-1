@@ -1,17 +1,15 @@
 #calendar-days-row > .col {
-    background-color: aqua;
+    background-color: deepskyblue;
     user-select: none;
 }
 
 .calendar-cell {
     min-height: 100px;
     user-select: none;
-    background-color: transparent;
+    background-color: lightblue;
 }
 
-.calendar-cell.marked {
-    background-color: blue;
-}
+
 
 .calendar-cell:hover {
     cursor:pointer;
@@ -19,7 +17,7 @@
 }
 
 .calendar-cell.marked:hover {
-    background-color: blue;
+    opacity: 75%;
 }
 
 .calendar-cell:active {
@@ -32,4 +30,17 @@
 
 #holidayhours {
     color: blue;
+}
+
+.calendar-cell.weekend {
+    background-color: rgba(0, 151, 151, 0.555);    
+}
+
+
+.calendar-cell.empty {
+    opacity: 50%;
+}
+
+.calendar-cell.marked {
+    background-color: blue;
 }
