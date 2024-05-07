@@ -1,12 +1,14 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
-from .forms import HolidayForm
+from .forms import HolidayForm, ShiftForm
 
 # Create your views here.
 def index(request):
-    form = HolidayForm()
+    holidayform = HolidayForm()
+    shiftform = ShiftForm()
     return render(request, "holidaycalculator/index.html", {
-        'holidayform':form
+        'holidayform':holidayform,
+        'shiftform':shiftform
     })
     
 def calendar(request):
@@ -22,20 +24,25 @@ def calendar(request):
         })
     
     if request.method == 'POST':
-        form = HolidayForm(request.POST)
-        if form.is_valid():
-            holidayhours = form.cleaned_data['hours']
+        holidayform = HolidayForm(request.POST)
+        shiftform = ShiftForm(request.POST)
+
+        if holidayform.is_valid() and shiftform.is_valid():
+            holidayhours = holidayform.cleaned_data['hours']
+            shiftlength = shiftform.cleaned_data['shiftlength']
             return render(request, "holidaycalculator/calendar.html", {
             "rows":ROWS,
             "cols":COLS,
             "days":DAYS,
-            "holidayhours":holidayhours
+            "holidayhours":holidayhours,
+            "shiftlength":shiftlength
             })
         
         else:
             #Raise validation error?
             return render(request, "holidaycalculator/index.html", {
-                        'holidayform':form
+                        'holidayform':holidayform,
+                        'shiftform':shiftform
             })
     
 def setHours(request):

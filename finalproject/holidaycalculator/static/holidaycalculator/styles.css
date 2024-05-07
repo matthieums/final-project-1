@@ -1,15 +1,23 @@
 #calendar-days-row > .col {
-    background-color: deepskyblue;
     user-select: none;
 }
 
 .calendar-cell {
     min-height: 100px;
-    user-select: none;
+}
+
+#calendar-days-row > .col {
+    background-color: deepskyblue;
+}
+
+.calendar-cell {
     background-color: lightblue;
 }
 
-
+.calendar-cell.marked,
+.calendar-cell.marked.weekend {
+    background-color: blue;
+}
 
 .calendar-cell:hover {
     cursor:pointer;
@@ -20,12 +28,9 @@
     opacity: 75%;
 }
 
-.calendar-cell:active {
-    background-color: darkblue;
-}
-
+.calendar-cell:active,
 .calendar-cell.marked:active {
-    background-color: darkblue !important; 
+    background-color: darkblue;
 }
 
 #holidayhours {
@@ -36,11 +41,6 @@
     background-color: rgba(0, 151, 151, 0.555);    
 }
 
-
 .calendar-cell.empty {
     opacity: 50%;
-}
-
-.calendar-cell.marked {
-    background-color: blue;
 }

@@ -1,19 +1,19 @@
 // Click event handler
-function handleClick(cell, index) {
-
+function handleClick(cell, index, shiftLength) {
     if (cell.innerHTML) {
         let combinedValue = cell.getAttribute('data-custom');
         let [year, month] = combinedValue.split(',');
         key = keyGen(year, month, index);
 
-        holidayHours = document.getElementById('holidayhours').innerHTML
-        remainingHours = parseInt(holidayHours)
+        remainingHours = parseFloat(document.getElementById('holidayhours').innerHTML)
+        remainingHours = parseFloat(remainingHours.toFixed(1))
 
     // If cell is not marked yet, mark it. Else remove mark.
         if (cell.classList.contains('marked')) {
             cell.classList.remove('marked')
             cell.style.backgroundColor = '';
-            remainingHours += 8;
+            remainingHours += shiftLength;
+            remainingHours = remainingHours.toFixed(1)
             document.getElementById('holidayhours').innerHTML = remainingHours;
             
             //Delete from local storage
@@ -23,7 +23,8 @@ function handleClick(cell, index) {
         } else {
             cell.classList.add('marked');
             cell.style.backgroundColor = 'blue'
-            remainingHours -= 8;
+            remainingHours -= shiftLength;
+            remainingHours = remainingHours.toFixed(1)
             document.getElementById('holidayhours').innerHTML = remainingHours;
 
             //Add to local storage
@@ -48,9 +49,9 @@ function handleClick(cell, index) {
     }
 }
 
-function setEventListeners(cells) { 
+function setEventListeners(cells, shiftLength) { 
     cells.forEach((cell, index) => {
-        const clickHandler = () => handleClick(cell, index);
+        const clickHandler = () => handleClick(cell, index, shiftLength);
         cell.addEventListener('click', clickHandler);
     })
 }
@@ -59,35 +60,42 @@ function keyGen(year, month, index) {
     return `_${year}_${month}_${index}`;
 }
  
-function checklocalStorage(cell, key) {
+function checklocalStorage(cell, key, hours) {
     if(localStorage.getItem(key)) {
         cell.classList.add('marked')
-        cell.backgroundColor = 'blue'
-    }
-}
+    
+        // Check if holiday hours is < 0, then all marked cells should be displayed in red.
+        if (hours < 0) {
+            cell.style.backgroundColor = 'red';
+        } else {
+                cell.style.backgroundColor = 'blue'
+        }
+    };
+}   
 
 function darkenEmptyCells (cells) {
-    const weekend = [5, 6, 12, 13, 19, 20, 26, 27, 33, 34, 41, 42]
+    const weekend = [5, 6, 12, 13, 19, 20, 26, 27, 33, 34, 40, 41]
     cells.forEach((cell, index) => {
         if (!cell.innerHTML) {
             cell.classList.add('empty')
         } else {
             cell.classList.remove('empty')
-            if (weekend.includes(index)) {
-                cell.classList.add('weekend')
-            } else {
-                cell.classList.remove('weekend')
-            }
+            
+        }
+        if (weekend.includes(index)) {
+            cell.classList.add('weekend')
+        } else {
+            cell.classList.remove('weekend')
         }
     })
 }
 
-
-
 document.addEventListener('DOMContentLoaded', function () {
-
     // clear previous session
     localStorage.clear()
+
+     // Hours to deduce or add when clicked, reflects the user's shifts
+     const shiftLength = parseFloat(document.getElementById('shift-length').innerHTML)
 
     if (document.getElementById('calendar-container')) {
         const additionalRow = document.getElementById('calendar-row-5')
@@ -112,7 +120,8 @@ document.addEventListener('DOMContentLoaded', function () {
         
         if (localStorage.getItem('holidayHours')) {
             localStorage.setItem('holidayHours', document.getElementById('holidayhours').innerHTML)
-            holidayHours = parseInt(localStorage.getItem('holidayHours'))
+            holidayHours = parseFloat(localStorage.getItem('holidayHours'))
+            holidayHours = holidayHours.toFixed(1)
             document.getElementById('holidayhours').innerHTML = holidayHours;
         }
     
@@ -153,7 +162,7 @@ document.addEventListener('DOMContentLoaded', function () {
         darkenEmptyCells (calendarCells)
         })
 
-        setEventListeners(calendarCells, currentYear, currentMonthIDX)
+        setEventListeners(calendarCells, shiftLength)
 
         // Reset button logic
         resetButton = document.getElementById('reset')
@@ -169,12 +178,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
             additionalRow.style.display = 'none';
 
-            currentMonthIDX = currentMonthIDX - 1 ;
+            currentMonthIDX -= 1 ;
             if (currentMonthIDX < 0) {
                 currentMonthIDX = 11
                 currentYear -= 1
             } 
 
+            let holidayHours =  parseFloat(document.getElementById('holidayhours').innerHTML)
+            holidayHours = holidayHours.toFixed(1)
             // Set each cell's attribute to current month and year
             calendarCells.forEach((cell, index) => {
                 cell.innerHTML = ''
@@ -183,9 +194,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 let YearAndMonth = currentYear + ',' + currentMonthIDX;
                 cell.setAttribute('data-custom', YearAndMonth);
                 key = keyGen(currentYear, currentMonthIDX, index)
-                checklocalStorage(cell, key) 
+                checklocalStorage(cell, key, holidayHours) 
             })
-            
+
             // Set current month to new current month
             document.querySelector('#current-month').innerHTML = `${months[currentMonthIDX]} ${currentYear}`;
 
@@ -217,15 +228,13 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
 
-
-
-
-
         //Next month button logic
         document.querySelector('#next-month').addEventListener('click', () => {
             additionalRow.style.display = 'none';
             currentMonthIDX += 1
-
+            
+            let holidayHours =  parseFloat(document.getElementById('holidayhours').innerHTML)
+            holidayHours = holidayHours.toFixed(1)
             if (currentMonthIDX > 11) {
                 currentMonthIDX = 0;
                 currentYear += 1;
@@ -238,7 +247,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 let YearAndMonth = currentYear + ',' + currentMonthIDX;
                 cell.setAttribute('data-custom', YearAndMonth);
                 let key = keyGen(currentYear, currentMonthIDX, index)
-                checklocalStorage(cell, key) 
+                checklocalStorage(cell, key, holidayHours) 
             })
 
             document.querySelector('#current-month').innerHTML = `${months[currentMonthIDX]} ${currentYear}`;

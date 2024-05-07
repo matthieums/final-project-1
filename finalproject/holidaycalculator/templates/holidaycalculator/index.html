@@ -1,49 +1,48 @@
 {% extends 'holidaycalculator/layout.html' %}
 
 {% block body %}
-<div class="body container-fluid">
+    <div class="row mt-4"></div>
+    <div class="row mt-4"></div>
+    <div class="row mt-4"></div>
+    <div class="row mt-4"></div>
+    <div class="row mt-4"></div>
 
-    <div class="row mt-4">
-        <div class="col-12 text-center">
-            <h1>Welcome!</h1> 
-            <div> 
-                <!-- <h2>Woud you like to know how many days off you can take this year?</h2>
-                <button id="getstarted" class="m-4 btn btn-primary">Get started</button>
-            </div> -->
-        </div>
-    </div>
+    <div class="body container d-flex   justify-content-center">
 
-    <div class="row">
-        <div class="col-12 text-center">
-            <h2>How many hours off can you take?</h2>
-                <form action="calendar" method="post">
-                    {% csrf_token %}
-                    {{ holidayform }}
-                <input type="Submit" class="btn btn-primary m-1" value="submit">
-                </form>
-        </div>
-    </div>
+        <div class="form-container border col-8 m-4 ">
 
-    <!-- <div class="row">
-        <div class="col-12 text-center">
-            <h2>How many hours per day do you spend at work?</h2>
-            <div class="form">
-                <input type="text">
-                <button class="m-4 btn btn-primary">Submit</button>
+        
+        <div class="row mt-4 justify-content-center">
+            <div class="col-4 mb-4 text-center">
+                <h1>Welcome!</h1> 
             </div>
         </div>
-    </div> -->
 
-    <!-- <div class="row">
-        <div class="col-12 text-center">
-            
-            <h1>Do you generally work from mondays to fridays?</h1>
-            <div class="form">
-                <button id="yes" class="m-4 btn btn-primary">Yes</button>
-                <button id="no" class="m-4 btn btn-primary">No</button>
+        <div class="row my-2 justify-content-center">
+            <div class="col-10 text-center ">
+                <h2>How many hours off can you take?</h2>
+                    <form action="calendar" method="post">
+                        {% csrf_token %}
+                        {{ holidayform }}
+                    
             </div>
         </div>
-    </div> -->
+        <div class="row my-2 justify-content-center">
+            <div class="col-10 text-center ">
+                <h2>What is the duration of your shifts?</h2>
+                        {{ shiftform }}
+                    <input type="Submit" class="btn btn-primary m-1" value="submit">
+                    </form>
+            </div>
+        </div>
 
-</div>
+        </div>
+
+        <!-- <div class="row">
+           form select: You work from ... to ...
+           OR
+           pick your days
+        </div> -->
+
+    </div>
 {% endblock %}
