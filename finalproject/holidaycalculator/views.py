@@ -10,6 +10,7 @@ def index(request):
         'holidayform':holidayform,
         'shiftform':shiftform
     })
+
     
 def calendar(request):
     ROWS = {x for x in range(6)}
@@ -44,6 +45,7 @@ def calendar(request):
                         'holidayform':holidayform,
                         'shiftform':shiftform
             })
+        
     
 def setHours(request):
      pass

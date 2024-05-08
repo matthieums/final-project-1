@@ -7,9 +7,9 @@
     <div class="row mt-4"></div>
     <div class="row mt-4"></div>
 
-    <div class="body container d-flex   justify-content-center">
+    <div class="body container-fluid d-flex justify-content-center">
 
-        <div class="form-container border col-8 m-4 ">
+        <div class="form-container border col-6 m-4 ">
 
         
         <div class="row mt-4 justify-content-center">
@@ -19,7 +19,7 @@
         </div>
 
         <div class="row my-2 justify-content-center">
-            <div class="col-10 text-center ">
+            <div class="col-10 text-center">
                 <h2>How many hours off can you take?</h2>
                     <form action="calendar" method="post">
                         {% csrf_token %}
@@ -27,11 +27,11 @@
                     
             </div>
         </div>
-        <div class="row my-2 justify-content-center">
-            <div class="col-10 text-center ">
-                <h2>What is the duration of your shifts?</h2>
+        <div class="row my-4 justify-content-center">
+            <div class="col-10 text-center">
+                <h2>What is the length (in hours) of your daily shifts?</h2>
                         {{ shiftform }}
-                    <input type="Submit" class="btn btn-primary m-1" value="submit">
+                    <input type="Submit" class="btn btn-primary mt-5" value="submit">
                     </form>
             </div>
         </div>

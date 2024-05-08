@@ -1,3 +1,11 @@
+.bg-custom-color {
+    background-color: rgba(250, 235, 215, 0.096) ;
+}
+
+.form-container {
+    background-color: white;
+}
+
 #calendar-days-row > .col {
     user-select: none;
 }

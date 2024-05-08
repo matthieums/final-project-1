@@ -94,12 +94,14 @@ document.addEventListener('DOMContentLoaded', function () {
     // clear previous session
     localStorage.clear()
 
-     // Hours to deduce or add when clicked, reflects the user's shifts
-     const shiftLength = parseFloat(document.getElementById('shift-length').innerHTML)
-
     if (document.getElementById('calendar-container')) {
+       
+        // Additional row display
         const additionalRow = document.getElementById('calendar-row-5')
         additionalRow.style.display = 'none'
+
+         // Hours to deduce or add when clicked, reflects the user's shifts
+         const shiftLength = parseFloat(document.getElementById('shift-length').innerHTML)
         
         // Get data to populate calendar and set each cells' value
         const months = ["January", "February", "March", "April", "May", "June", "July",
