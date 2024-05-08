@@ -46,8 +46,5 @@ def calendar(request):
                         'shiftform':shiftform
             })
         
-    
-def setHours(request):
-     pass
 
             
