@@ -52,3 +52,7 @@
 .calendar-cell.empty {
     opacity: 50%;
 }
+
+.calendar-cell.subzero {
+    background-color: red;
+}
