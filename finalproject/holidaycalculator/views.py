@@ -13,7 +13,7 @@ def index(request):
 
     
 def calendar(request):
-    ROWS = {x for x in range(6)}
+    ROWS = {x for x in range(5)}
     COLS = {x for x in range(7)}
     DAYS = ['Mon', 'Tu', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
     
