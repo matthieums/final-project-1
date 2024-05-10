@@ -136,12 +136,12 @@ function handleClick(cell, index, shiftLength) {
         // Visuals for the remaining number of hours and marked cells
         let markedCells = document.querySelectorAll('.calendar-cell.marked')
         if (document.getElementById('holidayhours').innerHTML < 0) {
-            document.getElementById('holidayhours').style.color = 'red'
+            document.getElementById('holidayhours').classList.add('subzero')
             markedCells.forEach(cell => {
                 cell.classList.add('subzero')
             })
         } else {
-            document.getElementById('holidayhours').style.color = 'blue'
+            document.getElementById('holidayhours').classList.remove('subzero')
             markedCells.forEach(cell => {
                 cell.classList.remove('subzero')
             })

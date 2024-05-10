@@ -1,3 +1,17 @@
+.month-switch-button {
+    color: lightblue !important;
+    font-size: 2.5rem ;
+}
+
+.month-switch-button:hover {
+    color: rgba(0, 151, 151, 0.555) !important;
+    cursor: pointer;
+}
+
+.month-switch-button:active {
+   color: rgba(0, 151, 151, 0.767) !important;
+}
+
 .bg-custom-color {
     background-color: rgba(250, 235, 215, 0.096) ;
 }
@@ -8,18 +22,16 @@
 
 #calendar-days-row > .col {
     user-select: none;
+    border-color: solid black;
 }
 
 .calendar-cell {
     min-height: 100px;
 }
 
-#calendar-days-row > .col {
-    background-color: deepskyblue;
-}
-
 .calendar-cell {
     background-color: lightblue;
+    font-size: larger;
 }
 
 
@@ -27,19 +39,17 @@
     opacity: 75%;
 }
 
-.calendar-cell:active,
-.calendar-cell.marked:active {
-    background-color: darkblue;
+#holidayhours {
+    color: rgb(138, 204, 39);
 }
 
-#holidayhours {
-    color: blue;
+#holidayhours.subzero {
+    color: rgb(248, 79, 79);
 }
 
 .calendar-cell:hover:not(.empty) {
     cursor:pointer;
-    border-color: green !important;
-    opacity: 85%;
+    border-color: rgb(138, 204, 39) !important;
 }
 
 
@@ -52,9 +62,18 @@
 }
 
 .calendar-cell.marked {
-    background-color: blue;
+    background-color: rgb(138, 204, 39);
+}
+
+.calendar-cell.marked:hover {
+    border-color: rgb(248, 79, 79) !important;
 }
 
 .calendar-cell.subzero {
-    background-color: red;
+    background-color: rgb(248, 79, 79);
+}
+
+.calendar-cell:active,
+.calendar-cell.marked:active {
+    background-color: rgb(118, 175, 33);
 }
