@@ -1,5 +1,7 @@
-
+// MAIN FUNCTION
 document.addEventListener('DOMContentLoaded', function () {
+
+    sessionStorage.clear()
 
     // Only display the calendar when everything has loaded to avoid flickering
     window.onload = function() {
@@ -7,14 +9,13 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (document.getElementById('calendar-container')) {
-
         const monthNames = ["January", "February", "March", "April", "May", "June", "July",
         "August", "September", "October", "November", "December"];
         const allCalendarCells = document.querySelectorAll('.calendar-cell');
         const currentMonthDisplay = document.querySelector('#current-month');
         const optionalRow = document.getElementById('calendar-row-5');
 
-        // Form data
+        // Gather the form's data
         const holidayHoursElement = document.getElementById('holidayhours');
         const shiftLength = formatShiftLength(document.getElementById('shift-length').innerHTML);
 
@@ -36,21 +37,15 @@ document.addEventListener('DOMContentLoaded', function () {
             let [daysInCurrentMonth, firstDayIDX] = getDataOnNewCurrentMonth(currentYear, currentMonthIDX)
 
             // Set each cell's attribute to current month and year
-            let YearAndMonth = currentYear + ',' + currentMonthIDX;
-            setCellData(allCalendarCells, YearAndMonth)
+            setCellData(allCalendarCells, currentYear, currentMonthIDX)
 
             // Populate calendar
             populateCells(allCalendarCells, firstDayIDX, daysInCurrentMonth, optionalRow)
 
             //At the moment, data is reset each time I refresh the page
-        //     // Check if there was a previous session
-        //     let holidayHours = getHolidayHours(holidayHoursElement)
-        //     checksessionStorage(allCalendarCells, holidayHours, currentYear, currentMonthIDX)
-                 
-        //     // If same session, get the remaining number of hours stored locally
-        //     if (sessionStorage.getItem("holidayHours")) {
-        //     holidayHoursElement.innerHTML = parseFloat(sessionStorage.getItem("holidayHours")).toFixed(1)
-        // }
+            // Check if there was a previous session
+            
+            checksessionStorage(allCalendarCells, holidayHoursElement, currentYear, currentMonthIDX)
 
             // Apply visuals to weekend and empty cells
             darkenWeekendAndEmptyCells (allCalendarCells)
@@ -84,7 +79,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Reset cell backgrounds and classes
             resetCalendar(allCalendarCells)
-
             initializeCurrentMonthView()
             });
         })
@@ -93,6 +87,7 @@ document.addEventListener('DOMContentLoaded', function () {
 }); // Close DOMEventlistener
 
 
+// SECONDARY FUNCTION
 // Function to add event listeners to the cells
 function setEventListeners(cells, shiftLength) { 
     cells.forEach((cell, index) => {
@@ -153,14 +148,15 @@ function keyGen(year, month, index) {
     return `_${year}_${month}_${index}`;
 }
  
-function checksessionStorage(cells, hours, currentYear, currentMonthIDX) {
+function checksessionStorage(cells, holidayHoursElement, currentYear, currentMonthIDX) {
+    let holidayHours = getHolidayHours(holidayHoursElement)
     cells.forEach((cell, index) => {
         let key = keyGen(currentYear, currentMonthIDX, index)
         if(sessionStorage.getItem(key)) {
             cell.classList.add('marked')
             
             // Check if holiday hours is < 0, then all marked cells should be displayed in red.
-            if (hours < 0) {
+            if (holidayHours < 0) {
                 cell.classList.add('subzero');
             } 
         };
@@ -184,23 +180,24 @@ function darkenWeekendAndEmptyCells (cells) {
     })
 }
 
-function resetCalendar (allCalendarCells) {
-    allCalendarCells.forEach(cell => {
+function resetCalendar (cells) {
+    cells.forEach(cell => {
         cell.innerHTML = ''
         cell.classList.remove('marked', 'subzero')
     })
 }
 
-function setCellData(allCalendarCells, YearAndMonth) {
-    allCalendarCells.forEach(cell => {
+function setCellData(cells, year, monthIDX) {
+    let YearAndMonth = year + ',' + monthIDX;
+    cells.forEach(cell => {
     cell.setAttribute('data-custom', YearAndMonth);
     })
 }
 
-function populateCells(allCalendarCells, firstDayIDX, daysInCurrentMonth, optionalRow) {
+function populateCells(cells, firstDayIDX, daysInCurrentMonth, optionalRow) {
     if (firstDayIDX >= 1 && firstDayIDX + daysInCurrentMonth < 37) {
         for(let i = 1; i <= daysInCurrentMonth; i++ ) {
-            allCalendarCells[firstDayIDX + i - 2].innerHTML = i;
+            cells[firstDayIDX + i - 2].innerHTML = i;
         }  
         optionalRow.classList.add('d-none')
     } else {
@@ -208,11 +205,11 @@ function populateCells(allCalendarCells, firstDayIDX, daysInCurrentMonth, option
         optionalRow.classList.add('d-flex')
         if (firstDayIDX < 1) {
             for(let i = 1; i <= daysInCurrentMonth; i++ ) {
-                allCalendarCells[firstDayIDX + 5 + i].innerHTML = i;
+                cells[firstDayIDX + 5 + i].innerHTML = i;
             }  
         } else {
             for(let i = 1; i <= daysInCurrentMonth; i++ ) {
-                allCalendarCells[firstDayIDX -2 + i].innerHTML = i;
+                cells[firstDayIDX -2 + i].innerHTML = i;
             }  
         } 
     }
