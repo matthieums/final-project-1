@@ -22,15 +22,6 @@
     background-color: lightblue;
 }
 
-.calendar-cell.marked,
-.calendar-cell.marked.weekend {
-    background-color: blue;
-}
-
-.calendar-cell:hover {
-    cursor:pointer;
-    border-color: green !important;
-}
 
 .calendar-cell.marked:hover {
     opacity: 75%;
@@ -45,12 +36,23 @@
     color: blue;
 }
 
+.calendar-cell:hover:not(.empty) {
+    cursor:pointer;
+    border-color: green !important;
+    opacity: 85%;
+}
+
+
+.calendar-cell.empty {
+    opacity: 50%;
+}
+
 .calendar-cell.weekend {
     background-color: rgba(0, 151, 151, 0.555);    
 }
 
-.calendar-cell.empty {
-    opacity: 50%;
+.calendar-cell.marked {
+    background-color: blue;
 }
 
 .calendar-cell.subzero {

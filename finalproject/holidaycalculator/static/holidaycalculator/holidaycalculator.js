@@ -6,11 +6,8 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('calendar-container').classList.remove('d-none')
     }
 
-    // clear previous session
-    localStorage.clear()
-
     if (document.getElementById('calendar-container')) {
-       
+
         const monthNames = ["January", "February", "March", "April", "May", "June", "July",
         "August", "September", "October", "November", "December"];
         const allCalendarCells = document.querySelectorAll('.calendar-cell');
@@ -25,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const today = new Date();
         let currentMonthIDX = today.getMonth();
         let currentYear = today.getFullYear();
+   
 
         // Event listeners for each cell
         setEventListeners(allCalendarCells, shiftLength)     
@@ -44,9 +42,15 @@ document.addEventListener('DOMContentLoaded', function () {
             // Populate calendar
             populateCells(allCalendarCells, firstDayIDX, daysInCurrentMonth, optionalRow)
 
-            // Check if there was a previous session
-            let holidayHours = getHolidayHours(holidayHoursElement)
-            checkLocalStorage(allCalendarCells, holidayHours, currentYear, currentMonthIDX)
+            //At the moment, data is reset each time I refresh the page
+        //     // Check if there was a previous session
+        //     let holidayHours = getHolidayHours(holidayHoursElement)
+        //     checksessionStorage(allCalendarCells, holidayHours, currentYear, currentMonthIDX)
+                 
+        //     // If same session, get the remaining number of hours stored locally
+        //     if (sessionStorage.getItem("holidayHours")) {
+        //     holidayHoursElement.innerHTML = parseFloat(sessionStorage.getItem("holidayHours")).toFixed(1)
+        // }
 
             // Apply visuals to weekend and empty cells
             darkenWeekendAndEmptyCells (allCalendarCells)
@@ -58,6 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const resetButton = document.getElementById('reset')
         resetButton.addEventListener('click', () => {
             location.reload()
+            sessionStorage.clear()
         })
 
         // Previous and next buttons logic
@@ -114,8 +119,8 @@ function handleClick(cell, index, shiftLength) {
             document.getElementById('holidayhours').innerHTML = remainingHours;
             
             //Delete from local storage
-            localStorage.setItem('holidayHours', remainingHours)
-            localStorage.removeItem(key)
+            sessionStorage.setItem('holidayHours', remainingHours)
+            sessionStorage.removeItem(key)
 
         } else {
             cell.classList.add('marked');
@@ -124,8 +129,8 @@ function handleClick(cell, index, shiftLength) {
             document.getElementById('holidayhours').innerHTML = remainingHours;
 
             //Add to local storage
-            localStorage.setItem('holidayHours', remainingHours)
-            localStorage.setItem(key, index);
+            sessionStorage.setItem('holidayHours', remainingHours)
+            sessionStorage.setItem(key, index);
         }
         
         // Visuals for the remaining number of hours and marked cells
@@ -148,10 +153,10 @@ function keyGen(year, month, index) {
     return `_${year}_${month}_${index}`;
 }
  
-function checkLocalStorage(cells, hours, currentYear, currentMonthIDX) {
+function checksessionStorage(cells, hours, currentYear, currentMonthIDX) {
     cells.forEach((cell, index) => {
         let key = keyGen(currentYear, currentMonthIDX, index)
-        if(localStorage.getItem(key)) {
+        if(sessionStorage.getItem(key)) {
             cell.classList.add('marked')
             
             // Check if holiday hours is < 0, then all marked cells should be displayed in red.
