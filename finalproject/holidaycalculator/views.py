@@ -40,7 +40,6 @@ def calendar(request):
             })
         
         else:
-            #Raise validation error?
             return render(request, "holidaycalculator/index.html", {
                         'holidayform':holidayform,
                         'shiftform':shiftform

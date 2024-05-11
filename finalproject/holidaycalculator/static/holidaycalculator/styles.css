@@ -27,13 +27,10 @@
 
 .calendar-cell {
     min-height: 100px;
-}
-
-.calendar-cell {
     background-color: lightblue;
     font-size: larger;
+    user-select: none;
 }
-
 
 .calendar-cell.marked:hover {
     opacity: 75%;
@@ -51,7 +48,6 @@
     cursor:pointer;
     border-color: rgb(138, 204, 39) !important;
 }
-
 
 .calendar-cell.empty {
     opacity: 50%;

@@ -15,5 +15,5 @@ class ShiftForm(forms.Form):
                                         'autocomplete': 'off',
                                         'placeholder':'7.5'}),
                                     min_value=1,
-                                    max_digits=2,
+                                    max_digits=3,
                                     decimal_places=1)

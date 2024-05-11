@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // variable that contains the functions to properly display the current month 
         const initializeCurrentMonthView = () => {
+
             // Display current month above calendar:
             displayCurrentMonth(currentMonthDisplay, monthNames, currentMonthIDX, currentYear)
 
@@ -50,7 +51,6 @@ document.addEventListener('DOMContentLoaded', function () {
             // Apply visuals to weekend and empty cells
             darkenWeekendAndEmptyCells (allCalendarCells)
         }
-
         initializeCurrentMonthView()
         
         // Reset button logic
@@ -82,12 +82,12 @@ document.addEventListener('DOMContentLoaded', function () {
             initializeCurrentMonthView()
             });
         })
-
     } // Close calendar-container logic
 }); // Close DOMEventlistener
 
 
-// SECONDARY FUNCTION
+// FUNCTIONS' DEFINITIONS
+
 // Function to add event listeners to the cells
 function setEventListeners(cells, shiftLength) { 
     cells.forEach((cell, index) => {
@@ -95,6 +95,7 @@ function setEventListeners(cells, shiftLength) {
         cell.addEventListener('click', clickHandler);
     })
 }
+
 
 // Click event handler
 function handleClick(cell, index, shiftLength) {
@@ -143,11 +144,13 @@ function handleClick(cell, index, shiftLength) {
         }
     }
 }
-     
+ 
+
 function keyGen(year, month, index) {
     return `_${year}_${month}_${index}`;
 }
- 
+
+
 function checksessionStorage(cells, holidayHoursElement, currentYear, currentMonthIDX) {
     let holidayHours = getHolidayHours(holidayHoursElement)
     cells.forEach((cell, index) => {
@@ -162,6 +165,7 @@ function checksessionStorage(cells, holidayHoursElement, currentYear, currentMon
         };
     })
 }  
+
 
 function darkenWeekendAndEmptyCells (cells) {
     const weekend = [5, 6, 12, 13, 19, 20, 26, 27, 33, 34, 40, 41]
@@ -180,6 +184,7 @@ function darkenWeekendAndEmptyCells (cells) {
     })
 }
 
+
 function resetCalendar (cells) {
     cells.forEach(cell => {
         cell.innerHTML = ''
@@ -187,12 +192,14 @@ function resetCalendar (cells) {
     })
 }
 
+
 function setCellData(cells, year, monthIDX) {
     let YearAndMonth = year + ',' + monthIDX;
     cells.forEach(cell => {
     cell.setAttribute('data-custom', YearAndMonth);
     })
 }
+
 
 function populateCells(cells, firstDayIDX, daysInCurrentMonth, optionalRow) {
     if (firstDayIDX >= 1 && firstDayIDX + daysInCurrentMonth < 37) {
@@ -215,20 +222,24 @@ function populateCells(cells, firstDayIDX, daysInCurrentMonth, optionalRow) {
     }
 }
 
+
 function getHolidayHours (element) {
     let holidayHours =  parseFloat(element.innerHTML)
     holidayHours = holidayHours.toFixed(1)
     return holidayHours
 }
 
+
 function formatShiftLength (element) {
     element = parseFloat(element)
     return element
 }
 
+
 function displayCurrentMonth(element, monthNames, currentMonthIDX, currentYear) {
     element.innerHTML = `${monthNames[currentMonthIDX]} ${currentYear}`;
 }
+
 
 function getDataOnNewCurrentMonth(currentYear, currentMonthIDX) {
     const dayCount = (year, month) => new Date(year, month, 0).getDate();
